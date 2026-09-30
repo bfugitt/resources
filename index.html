@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Seasons of the Northwest</title>
+<title>Seasons of California</title>
 <style>
   :root {
     --spruce: #1e3b34; --fog: #e8efec; --shell: #fbfaf6; --river: #1f6f78; --river-dk: #17535a;
@@ -19,7 +19,22 @@
   p { margin: 0 0 .8em; max-width: 68ch; }
   .lead { font-family: var(--head); font-size: 1.3rem; color: var(--river-dk); }
   .muted { color: #4f665f; margin: 0; }
-  .hero svg { width: 100%; height: 150px; border-radius: 10px; display: block; margin-bottom: 18px; }
+  .hero svg { width: 100%; height: 150px; display: block; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .btn.small { min-height: 40px; padding: 4px 14px; font-size: .95rem; }
+  .area-tag { border-left: 10px solid; padding: 2px 12px; font-family: var(--head); font-weight: bold; background: var(--shell); border-radius: 0 6px 6px 0; }
+  .area-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 16px 0; }
+  .area-card { font: inherit; text-align: left; display: flex; gap: 12px; align-items: center; background: var(--shell); color: var(--spruce); border: 1px solid var(--line); border-left: 12px solid; border-radius: 10px; padding: 14px 16px; min-height: 84px; cursor: pointer; }
+  .area-card:hover { background: #fff; border-color: var(--river); }
+  .swatch { width: 18px; height: 48px; border-radius: 4px; flex: none; }
+  .ac-text { display: flex; flex-direction: column; gap: 2px; }
+  .ac-text strong { font-family: var(--head); font-size: 1.25rem; }
+  .ac-text span { font-size: .92rem; }
+  .badge { display: inline-block; background: #dde9e5; border-radius: 999px; padding: 0 10px; font-size: .82rem !important; width: fit-content; }
+  .hero { border-bottom: 8px solid; border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
+  .hero svg { margin-bottom: 0; border-radius: 0; }
+  .act.closed { opacity: .55; background: #eef2f0; }
+
   .card { background: var(--shell); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin: 14px 0; }
   .note { background: #dde9e5; border-left: 6px solid var(--river); padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0; }
   .note h3 { margin-bottom: .2em; }
@@ -78,7 +93,13 @@
 <body>
 <main id="app"></main>
 <noscript>This game needs JavaScript turned on.</noscript>
+<script src="areas/common.js"></script>
 <script src="areas/northwest.js"></script>
+<script src="areas/northeast.js"></script>
+<script src="areas/central.js"></script>
+<script src="areas/greatbasin.js"></script>
+<script src="areas/southern.js"></script>
+<script src="areas/colorado.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

@@ -5,12 +5,16 @@
    The engine (game.js) reads this file; you don't need to touch
    game.js to change wording, numbers, or events.
    ========================================================== */
-window.GAME_AREAS = window.GAME_AREAS || {};
 
 window.GAME_AREAS.northwest = {
-  id: "northwest",
+  id: "northwest", name: "Northwest", color: "#d98a86", hero: "forest",
+  cardLine: "Forests, rivers, and salmon",
   title: "Seasons of the Northwest",
   subtitle: "A land of forests and rivers",
+  meters: { h1: { emoji: "🐟", label: "River health" }, h2: { emoji: "🌲", label: "Forests and meadows" } },
+  labels: { shelter: "Plank house", clothing: "Clothing" },
+  decay: { shelter: [8, 6, 10, 20], clothing: [6, 4, 8, 15] },
+  goods: { emoji: "📿", name: "shell strings" },
 
   intro: {
     where: "The Northwest area of California is a land of forests and rivers with a rainy but mild climate. Along the coast there are marshes filled with reeds, and tall trees cover the hills near the sea. Further inland there are grassy meadows. The beaches, marshes, and rivers were full of food.",
@@ -24,11 +28,10 @@ window.GAME_AREAS.northwest = {
     note: "This game is a simplified model made for learning in class. Real life was richer and more complicated. The Northwest has many different peoples, each with its own language, stories, and ways of doing things. This game does not try to show any one tribe's traditions. It leaves out ceremonies and sacred stories on purpose."
   },
 
-  start: { food: 14, shelter: 70, clothing: 70, strings: 2, river: 8, land: 8, wellbeing: 70 },
+  start: { food: 14, shelter: 70, clothing: 70, goods: 2, h1: 8, h2: 8, wellbeing: 70 },
   teams: 6,          // work teams each season
   foodNeed: 14,      // food the community eats each season
   foodCap: 40,       // the storehouse holds this much
-  canoeWork: 4,      // team-seasons of work to finish a canoe
 
   seasons: [
     { name: "Spring", emoji: "🌱",
@@ -44,25 +47,25 @@ window.GAME_AREAS.northwest = {
   /* ---------- ACTIVITIES ----------
      kind: food | shelter | clothing | canoe | strings | trade | care
      yields: food per team in [Spring, Summer, Fall, Winter]
-     source: "river" or "land" makes the yield depend on that health meter
+     source: "h1" or "land" makes the yield depend on that health meter
      limit: more teams than this in one season harms that meter  */
   activities: [
-    { id: "salmon", group: "Food", emoji: "🐟", name: "Fish for salmon", kind: "food", source: "river",
+    { id: "salmon", group: "Food", emoji: "🐟", name: "Fish for salmon", kind: "food", source: "h1",
       yields: [3, 2, 6, 1], limit: 3,
       desc: "Use nets and traps as salmon swim upstream. The Karuk caught so many this way that a family might have enough fish for a whole year in just a few weeks.",
       tooMany: "Too many teams fishing took more salmon than the river could replace. There may be fewer fish next time." },
     { id: "shellfish", group: "Food", emoji: "🐚", name: "Gather shellfish", kind: "food",
       yields: [3, 3, 3, 2],
       desc: "The beaches and marshes were full of shellfish and fish. This food is steady all year." },
-    { id: "hunt", group: "Food", emoji: "🦌", name: "Hunt deer and elk", kind: "food", source: "land",
+    { id: "hunt", group: "Food", emoji: "🦌", name: "Hunt deer and elk", kind: "food", source: "h2",
       yields: [2, 2, 4, 3], limit: 2,
       desc: "Deer and elk roamed the forests.",
       tooMany: "Too many hunting teams left fewer deer and elk in the forest." },
-    { id: "gather", group: "Food", emoji: "🌿", name: "Gather plants and berries", kind: "food", source: "land",
+    { id: "gather", group: "Food", emoji: "🌿", name: "Gather plants and berries", kind: "food", source: "h2",
       yields: [3, 4, 2, 1], limit: 3,
       desc: "Collect plants, seeds, and berries from the meadows and forests.",
       tooMany: "Gathering too much left fewer plants to grow back." },
-    { id: "canoeFish", group: "Food", emoji: "🛶", name: "Fish from the canoe", kind: "food", needsCanoe: true,
+    { id: "canoeFish", group: "Food", emoji: "🛶", name: "Fish from the canoe", kind: "food", needsProject: true,
       yields: [4, 4, 4, 2],
       desc: "Your canoe can reach fish far out on the water. The ocean stays steady, so this does not wear out the river." },
 
@@ -71,17 +74,27 @@ window.GAME_AREAS.northwest = {
     { id: "capes", group: "Home and clothing", emoji: "🧵", name: "Make cedar-bark capes", kind: "clothing", gain: 15,
       desc: "Waterproof capes made from the bark of cedar trees keep people dry in the rain." },
 
-    { id: "canoe", group: "Big projects and trade", emoji: "🪵", name: "Carve a canoe", kind: "canoe",
+    { id: "canoe", group: "Big projects and trade", emoji: "🪵", name: "Carve a canoe", kind: "project",
       desc: "The Yurok hollowed out huge logs to make ocean-going canoes that could carry lots of fish. A canoe takes several seasons of work, and it does not wear out." },
-    { id: "strings", group: "Big projects and trade", emoji: "📿", name: "Gather and string shells", kind: "strings", gain: 3,
+    { id: "strings", group: "Big projects and trade", emoji: "📿", name: "Gather and string shells", kind: "goods", gain: 3,
       desc: "Shells served as money. Each team makes 3 strings of shells to trade." },
-    { id: "trade", group: "Big projects and trade", emoji: "🔄", name: "Trade with neighbors", kind: "trade", cost: 2, food: 5, foodCanoe: 7,
+    { id: "trade", group: "Big projects and trade", emoji: "🔄", name: "Trade with neighbors", kind: "trade", cost: 2, food: 5, foodProject: 7,
       desc: "Trade shell strings for food. Each team uses 2 strings. A canoe lets you carry more." },
 
     { id: "care", group: "Care for the land", emoji: "🌱", name: "Care for the river and land", kind: "care",
       desc: "Gather carefully, leave some behind for next year, and look after the river and meadows. Each team helps the weaker of the two recover." }
   ],
 
+  project: { id: "canoe", emoji: "🛶", stat: "Canoe", work: 4, boosts: { salmon: 1.2 },
+    done: "Your canoe is finished! Canoe fishing is now open, salmon catches grow, and trade carries more.",
+    finalYes: "You finished a canoe, like the Yurok canoe makers. It carried more fish and more trade goods.",
+    finalNo: "You did not finish a canoe this time. Try it next game and see how it changes your catch." },
+  goodsFinal: "Shells were money, and rich families showed off rare shells. But wealth alone did not win a person respect.",
+  whyNotes: [
+    { activity: "salmon", season: 2, text: "Fall is when salmon swim upstream. That is why fishing paid off so well." },
+    { activity: "salmon", season: 3, text: "Salmon are hard to catch in winter. Stored food matters most now." },
+    { activity: "gather", season: 3, text: "Few plants grow in the winter rain, so gathering brings little." }
+  ],
   /* ---------- EVENTS ----------
      seasons: which seasons it can happen in (0 Spring, 1 Summer, 2 Fall, 3 Winter)
      effects: food, shelter, clothing, strings, river, land, teamsLost, shared,
@@ -92,13 +105,13 @@ window.GAME_AREAS.northwest = {
       text: "This fall fewer salmon are swimming up the river. Nature changes from year to year. Communities that eat many different foods handle these years best.",
       choices: [
         { label: "Let more fish swim upstream", desc: "Fish less so more salmon can lay their eggs.",
-          effects: { mod: { salmon: 0.5 }, river: 2 },
+          effects: { mod: { salmon: 0.5 }, h1: 2 },
           result: "You left more fish to lay eggs. Food is tight this fall, but the river will be healthier for years to come." },
-        { label: "Trade shell strings for food", desc: "Give 4 shell strings and get 10 food.", needs: { strings: 4 },
-          effects: { mod: { salmon: 0.5 }, strings: -4, food: 10 },
+        { label: "Trade shell strings for food", desc: "Give 4 shell strings and get 10 food.", needs: { goods: 4 },
+          effects: { mod: { salmon: 0.5 }, goods: -4, food: 10 },
           result: "Your shell strings bought food from neighbors. Trade helped your community through a hard year." },
         { label: "Fish as hard as you can", desc: "Get more salmon now. The river may pay for it later.",
-          effects: { mod: { salmon: 0.7 }, river: -2 },
+          effects: { mod: { salmon: 0.7 }, h1: -2 },
           result: "You caught more fish now, but taking so many weakened the river. Think about the next few years." }
       ] },
 
@@ -160,7 +173,7 @@ window.GAME_AREAS.northwest = {
 
     { id: "calmSeas", seasons: [0, 1, 2], emoji: "🌊", title: "Calm seas",
       text: "The ocean is calm and full of fish. A canoe can carry a team far out on the water.",
-      needs: { canoe: true },
+      needs: { project: true },
       choices: [
         { label: "Take long fishing trips", desc: "Canoe fishing is extra good this season.",
           effects: { mod: { canoeFish: 1.5 } },
@@ -169,11 +182,11 @@ window.GAME_AREAS.northwest = {
   ],
 
   today: {
-    text: "The Yurok, Karuk, and Tolowa peoples are active, living communities today, each with its own government, language programs, and cultural work. To learn about them from the people themselves, visit their official websites:",
+    text: "The Yurok, Karuk, and Tolowa peoples are living communities today. Each has its own government, language programs, and work to protect the land, rivers, and salmon. To learn about them from the people themselves, visit their official websites:",
     links: [
       { name: "Yurok Tribe", url: "https://www.yuroktribe.org" },
       { name: "Karuk Tribe", url: "https://www.karuk.us" },
-      { name: "Tolowa Dee-ni' Nation", url: "https://www.tolowa-nsn.gov" }
+      { name: "Tolowa Dee-ni' Nation", url: "https://www.tolowa.gov" }
     ]
   },
 
@@ -181,12 +194,5 @@ window.GAME_AREAS.northwest = {
     "Which resources in the Northwest helped your community the most? Why?",
     "How did the environment shape the way your community lived?",
     "What did you do to take care of the river and land? Why does that matter?"
-  ],
-
-  glossary: [
-    { word: "adapt", meaning: "to change how you do things to fit where you live" },
-    { word: "culture", meaning: "the way of life of a group of people, including their food, homes, tools, language, and beliefs" },
-    { word: "resource", meaning: "something from nature that people can use, like fish, trees, or shells" },
-    { word: "trade", meaning: "to give something you have for something you need" }
   ]
 };
